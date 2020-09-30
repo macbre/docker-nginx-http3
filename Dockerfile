@@ -1,7 +1,7 @@
 ARG NGINX_VERSION=1.19.2
 
 # https://github.com/google/ngx_brotli
-ARG NGX_BROTLI_COMMIT=25f86f0bac1101b6512135eac5f93c49c63609e3
+ARG NGX_BROTLI_COMMIT=685d7baea9d8ac7113d14ca6dd1eb4577925af4a
 ARG CONFIG="\
 		--prefix=/etc/nginx \
 		--sbin-path=/usr/sbin/nginx \

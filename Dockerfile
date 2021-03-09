@@ -7,8 +7,8 @@ ARG NGX_BROTLI_COMMIT=9aec15e2aa6feea2113119ba06460af70ab3ea62
 # https://hub.docker.com/r/firesh/nginx-lua/dockerfile
 ARG NGX_DEVEL_KIT_VERSION=0.3.1
 
-# https://github.com/openresty/luajit2/releases
-ARG LUA_NGINX_MODULE_VERSION=0.10.14
+# https://github.com/openresty/lua-nginx-module/releases/
+ARG LUA_NGINX_MODULE_VERSION=0.10.19
 
 ARG CONFIG="\
 		--prefix=/etc/nginx \

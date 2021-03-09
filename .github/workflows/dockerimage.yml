@@ -44,7 +44,7 @@ jobs:
 
     - name: Serve a static asset
       run: |
-        docker run --detach --rm \
+        docker run --rm \
           -p 0.0.0.0:8888:80 \
           -v "$PWD/tests":/static:ro \
           -v "$PWD/tests/static.conf":/etc/nginx/conf.d/static.conf:ro \

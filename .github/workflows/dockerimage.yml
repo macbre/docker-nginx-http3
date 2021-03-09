@@ -36,6 +36,12 @@ jobs:
     - name: Run nginx -V
       run: docker run -t ${{ github.repository }} nginx -V
 
+    # Don’t run, just test the configuration file.
+    # NGINX checks configuration for correct syntax and then try to open files referred in configuration.
+    # https://www.nginx.com/resources/wiki/start/topics/tutorials/commandline/
+    - name: Run nginx -t
+      run: docker run -t ${{ github.repository }} nginx -t
+
     - name: Serve a static asset
       run: |
         docker run --detach --rm \

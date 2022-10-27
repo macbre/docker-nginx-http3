@@ -28,12 +28,12 @@ docker pull ghcr.io/macbre/nginx-http3:latest
 
 ```
 $ docker run -it macbre/nginx-http3 nginx -V
-nginx version: nginx/1.23.1 (quic-3550b00d9dc8-boringssl-8ce0e1c14e48109773f1e94e5f8b020aa1e24dc5)
-built by gcc 11.2.1 20220219 (Alpine 11.2.1_git20220219)
+nginx version: nginx/1.23.2 (quic-3be953161026-boringssl-8ce0e1c14e48109773f1e94e5f8b020aa1e24dc5)
+built by gcc 11.2.1 20220219 (Alpine 11.2.1_git20220219) 
 built with OpenSSL 1.1.1 (compatible; BoringSSL) (running with BoringSSL)
 TLS SNI support enabled
 configure arguments: 
-	--build=quic-3550b00d9dc8-boringssl-8ce0e1c14e48109773f1e94e5f8b020aa1e24dc5 
+	--build=quic-3be953161026-boringssl-8ce0e1c14e48109773f1e94e5f8b020aa1e24dc5 
 	--prefix=/etc/nginx 
 	--sbin-path=/usr/sbin/nginx 
 	--modules-path=/usr/lib/nginx/modules 
@@ -82,7 +82,7 @@ configure arguments:
 	--add-module=/usr/src/ngx_brotli 
 	--add-module=/usr/src/headers-more-nginx-module-0.34 
 	--add-module=/usr/src/njs/nginx 
-	--add-dynamic-module=/usr/src/ngx_http_geoip2_module
+	--add-dynamic-module=/usr/src/ngx_http_geoip2_module 
 	--with-cc-opt=-I../boringssl/include 
 	--with-ld-opt='-L../boringssl/build/ssl -L../boringssl/build/crypto'
 

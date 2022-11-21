@@ -1,4 +1,3 @@
-
 # https://hg.nginx.org/nginx-quic/fie/tip/src/core/nginx.h
 ARG NGINX_VERSION=1.23.2
 
@@ -75,7 +74,7 @@ ARG CONFIG="\
 		--add-dynamic-module=/usr/src/ngx_http_geoip2_module \
 	"
 
-FROM debian:buster-slim AS base
+FROM alpine:3.16 AS base
 
 ARG NGINX_VERSION
 ARG NGINX_COMMIT
@@ -85,18 +84,35 @@ ARG NJS_COMMIT
 ARG GEOIP2_VERSION
 ARG CONFIG
 
-ENV DEBIAN_FRONTEND=noninteractive
-
 RUN \
-        apt-get update -y \
-
-	&& apt-get install dpkg-dev build-essential gnupg2 git gcc cmake libpcre3 libpcre3-dev zlib1g zlib1g-dev openssl libssl-dev curl unzip mercurial ninja-build golang -y \
-
-        && apt install -y autoconf libtool automake cmake gcc pkg-config libunwind-dev \
-
-        && apt install -y libmaxminddb-dev \
-
-        && apt install -y libreadline-dev
+	apk add --no-cache --virtual .build-deps \
+		gcc \
+		libc-dev \
+		make \
+		musl-dev \
+		go \
+		ninja \
+		mercurial \
+		openssl-dev \
+		pcre-dev \
+		zlib-dev \
+		linux-headers \
+		gnupg \
+		libxslt-dev \
+		gd-dev \
+		geoip-dev \
+		perl-dev \
+	&& apk add --no-cache --virtual .brotli-build-deps \
+		autoconf \
+		libtool \
+		automake \
+		git \
+		g++ \
+		cmake \
+	&& apk add --no-cache --virtual .geoip2-build-deps \
+		libmaxminddb-dev \
+	&& apk add --no-cache --virtual .njs-build-deps \
+		readline-dev
 
 WORKDIR /usr/src/
 
@@ -120,22 +136,20 @@ RUN \
   && cd /usr/src \
   && git clone https://github.com/google/boringssl \
   && cd boringssl \
-#  && git checkout $BORINGSSL_COMMIT
+  && git checkout $BORINGSSL_COMMIT
 
 RUN \
   echo "Building boringssl ..." \
   && cd /usr/src/boringssl \
   && mkdir build \
   && cd build \
-  && cmake ../ \
-  && make -j1
-#  && cmake -GNinja .. \
-#  && ninja
+  && cmake -GNinja .. \
+  && ninja
 
 RUN \
   echo "Downloading headers-more-nginx-module ..." \
   && cd /usr/src \
-  && curl -fsSL https://github.com/openresty/headers-more-nginx-module/archive/refs/tags/v${HEADERS_MORE_VERSION}.tar.gz -o headers-more-nginx-module.tar.gz \
+  && wget -q https://github.com/openresty/headers-more-nginx-module/archive/refs/tags/v${HEADERS_MORE_VERSION}.tar.gz -O headers-more-nginx-module.tar.gz \
   && tar -xf headers-more-nginx-module.tar.gz
 
 RUN \
@@ -151,9 +165,6 @@ RUN \
   && make njs \
   && mv /usr/src/njs/build/njs /usr/sbin/njs \
   && echo "njs v$(njs -v)"
-
-# temp package adds
-RUN apt-get install libxslt-dev libgd-dev libgeoip-dev binutils-i586-linux-gnu libperl-dev perl -y
 
 RUN \
   echo "Building nginx ..." \
@@ -174,13 +185,13 @@ RUN \
 	\
 	# https://tools.ietf.org/html/rfc7919
 	# https://github.com/mozilla/ssl-config-generator/blob/master/docs/ffdhe2048.txt
-	&& curl -fsSL https://ssl-config.mozilla.org/ffdhe2048.txt -o /etc/ssl/dhparam.pem \
+	&& wget -q https://ssl-config.mozilla.org/ffdhe2048.txt -O /etc/ssl/dhparam.pem \
 	\
 	# Bring in gettext so we can get `envsubst`, then throw
 	# the rest away. To do this, we need to install `gettext`
 	# then move `envsubst` out of the way so `gettext` can
 	# be deleted completely, then move `envsubst` back.
-	&& apt-get install gettext pax-utils -y \
+	&& apk add --no-cache --virtual .gettext gettext \
 	\
 	&& scanelf --needed --nobanner /usr/sbin/nginx /usr/sbin/njs /usr/lib/nginx/modules/*.so /usr/bin/envsubst \
 			| awk '{ gsub(/,/, "\nso:", $2); print "so:" $2 }' \
@@ -188,7 +199,7 @@ RUN \
 			| xargs -r apk info --installed \
 			| sort -u > /tmp/runDeps.txt
 
-FROM debian:buster-slim
+FROM alpine:3.16
 ARG NGINX_VERSION
 ARG NGINX_COMMIT
 
@@ -199,7 +210,7 @@ COPY --from=base /tmp/runDeps.txt /tmp/runDeps.txt
 COPY --from=base /etc/nginx /etc/nginx
 COPY --from=base /usr/lib/nginx/modules/*.so /usr/lib/nginx/modules/
 COPY --from=base /usr/sbin/nginx /usr/sbin/
-#COPY --from=base /usr/local/lib/perl5/site_perl /usr/local/lib/perl5/site_perl
+COPY --from=base /usr/local/lib/perl5/site_perl /usr/local/lib/perl5/site_perl
 COPY --from=base /usr/bin/envsubst /usr/local/bin/envsubst
 COPY --from=base /etc/ssl/dhparam.pem /etc/ssl/dhparam.pem
 
@@ -207,9 +218,9 @@ COPY --from=base /usr/sbin/njs /usr/sbin/njs
 
 # hadolint ignore=SC2046
 RUN \
-	addgroup --system nginx \
-	&& adduser --disabled-password --system --home /var/cache/nginx --shell /sbin/nologin --ingroup nginx nginx \
-	&& apt install -y tzdata $(cat /tmp/runDeps.txt) \
+	addgroup -S nginx \
+	&& adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
+	&& apk add --no-cache --virtual .nginx-rundeps tzdata $(cat /tmp/runDeps.txt) \
 	&& rm /tmp/runDeps.txt \
 	&& ln -s /usr/lib/nginx/modules /etc/nginx/modules \
 	# forward request and error logs to docker log collector
@@ -225,7 +236,6 @@ COPY ssl_common.conf /etc/nginx/conf.d/ssl_common.conf
 RUN env | sort
 
 # njs version
-RUN apt-get update -y && apt-get install libssl-dev libreadline-dev -y
 RUN njs -v
 
 # test the configuration

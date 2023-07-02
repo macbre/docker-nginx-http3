@@ -102,6 +102,7 @@ RUN \
 		gd-dev \
 		geoip-dev \
 		perl-dev \
+		patch \
 	&& apk add --no-cache --virtual .brotli-build-deps \
 		autoconf \
 		libtool \
@@ -155,6 +156,14 @@ RUN \
 RUN \
   echo "Downloading ngx_http_geoip2_module ..." \
   && git clone --depth 1 --branch ${GEOIP2_VERSION} https://github.com/leev/ngx_http_geoip2_module /usr/src/ngx_http_geoip2_module
+
+RUN \
+  echo "Downloading Enable_BoringSSL_OCSP patch ..." \
+  && set -eux \
+  && cd /usr/src \
+  && wget -q https://raw.githubusercontent.com/kn007/patch/cd03b77647c9bf7179acac0125151a0fbb4ac7c8/Enable_BoringSSL_OCSP.patch \
+  && cd /usr/src/nginx-$NGINX_VERSION \
+  && patch -p01 < /usr/src/Enable_BoringSSL_OCSP.patch
 
 RUN \
   echo "Cloning and configuring njs ..." \

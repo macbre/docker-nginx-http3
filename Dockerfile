@@ -33,8 +33,8 @@ ARG CONFIG="\
 		--conf-path=/etc/nginx/nginx.conf \
 		--error-log-path=/var/log/nginx/error.log \
 		--http-log-path=/var/log/nginx/access.log \
-		--pid-path=/var/run/nginx.pid \
-		--lock-path=/var/run/nginx.lock \
+   		--pid-path=/var/run/nginx/nginx.pid \
+    		--lock-path=/var/run/nginx/nginx.lock \
 		--http-client-body-temp-path=/var/cache/nginx/client_temp \
 		--http-proxy-temp-path=/var/cache/nginx/proxy_temp \
 		--http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
@@ -174,6 +174,7 @@ RUN \
 
 RUN \
   echo "Building nginx ..." \
+  && mkdir -p /var/run/nginx/ \
 	&& cd /usr/src/nginx-$NGINX_VERSION \
 	&& ./auto/configure $CONFIG \
       --with-cc-opt="-I../boringssl/include"   \
@@ -214,6 +215,7 @@ ARG NGINX_GROUP_GID
 ENV NGINX_VERSION $NGINX_VERSION
 ENV NGINX_COMMIT $NGINX_COMMIT
 
+COPY --from=base /var/run/nginx/ /var/run/nginx/
 COPY --from=base /tmp/runDeps.txt /tmp/runDeps.txt
 COPY --from=base /etc/nginx /etc/nginx
 COPY --from=base /usr/lib/nginx/modules/*.so /usr/lib/nginx/modules/
@@ -253,9 +255,11 @@ EXPOSE 8080 8443
 
 STOPSIGNAL SIGTERM
 
-# prepare to switching to non-root - update file permissions
-RUN chown --verbose nginx:nginx \
-	/var/run/nginx.pid
+# prepare to switching to non-root - update file permissions of directory containing
+# nginx.lock and nginx.pid file
+RUN \
+  chown -R --verbose nginx:nginx \
+    /var/run/nginx/
 
 USER nginx
 CMD ["nginx", "-g", "daemon off;"]

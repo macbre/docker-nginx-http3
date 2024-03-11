@@ -152,3 +152,17 @@ Building an image:
 docker pull ghcr.io/macbre/nginx-http3:latest
 DOCKER_BUILDKIT=1 docker build . -t macbre/nginx --cache-from=ghcr.io/macbre/nginx-http3:latest --progress=plain
 ```
+
+### Docker Compose example
+
+It is necessary to expose both UDP and TCP ports to be able to HTTP/3
+
+```yaml
+  nginx:
+    image: macbre/nginx-http3
+    ports:
+      - '443:443/tcp'
+      - '443:443/udp' # use UDP for usage of HTTP/3
+```
+
+Note: both TCP and UDP HTTP/3 ports needs to be the same

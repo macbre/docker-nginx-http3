@@ -169,7 +169,8 @@ RUN \
   && cd /usr/src/njs \
   && git init \
   && git remote add origin https://github.com/nginx/njs.git \
-  && git fetch --depth 1 origin ${NJS_COMMIT} \
+  && git fetch --depth 1 origin ${NJS_COMMIT} && ls -lh \
+  && chmod 744 configure \
   && ./configure \
   && make njs \
   && mv /usr/src/njs/build/njs /usr/sbin/njs \

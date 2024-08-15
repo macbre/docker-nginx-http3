@@ -10,8 +10,8 @@ ARG NGX_BROTLI_COMMIT=a71f9312c2deb28875acc7bacfdd5695a111aa53
 # https://github.com/google/boringssl
 #ARG BORINGSSL_COMMIT=fae0964b3d44e94ca2a2d21f86e61dabe683d130
 
-# http://hg.nginx.org/njs / v0.8.5
-ARG NJS_COMMIT=a419f9189f55
+# https://github.com/nginx/njs/releases/tag/0.8.5
+ARG NJS_COMMIT=9d4bf6c60aa60a828609f64d1b5c50f71bb7ef62
 
 # https://github.com/openresty/headers-more-nginx-module#installation
 # we want to have https://github.com/openresty/headers-more-nginx-module/commit/e536bc595d8b490dbc9cf5999ec48fca3f488632
@@ -165,9 +165,11 @@ RUN \
 
 RUN \
   echo "Cloning and configuring njs ..." \
-  && cd /usr/src \
-  && hg clone --rev ${NJS_COMMIT} http://hg.nginx.org/njs \
+  && mkdir /usr/src/njs \
   && cd /usr/src/njs \
+  && git init \
+  && git remote add origin https://github.com/nginx/njs.git \
+  && git fetch --depth 1 origin ${NJS_COMMIT} \
   && ./configure \
   && make njs \
   && mv /usr/src/njs/build/njs /usr/sbin/njs \

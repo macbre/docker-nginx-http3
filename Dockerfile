@@ -20,6 +20,9 @@ ARG HEADERS_MORE_VERSION=0.37
 # https://github.com/leev/ngx_http_geoip2_module/releases
 ARG GEOIP2_VERSION=3.4
 
+# https://github.com/tokers/zstd-nginx-module/releases
+ARG ZSTD_VERSION=0.1.1
+
 # NGINX UID / GID
 ARG NGINX_USER_UID=100
 ARG NGINX_GROUP_GID=101
@@ -77,6 +80,7 @@ ARG CONFIG="\
 		--add-module=/usr/src/ngx_brotli \
 		--add-module=/usr/src/headers-more-nginx-module-$HEADERS_MORE_VERSION \
 		--add-module=/usr/src/njs/nginx \
+		--add-module=/usr/src/zstd \
 		--add-dynamic-module=/usr/src/ngx_http_geoip2_module \
 	"
 
@@ -88,6 +92,7 @@ ARG NGX_BROTLI_COMMIT
 ARG HEADERS_MORE_VERSION
 ARG NJS_COMMIT
 ARG GEOIP2_VERSION
+ARG ZSTD_VERSION
 ARG NGINX_USER_UID
 ARG NGINX_GROUP_GID
 ARG CONFIG
@@ -120,7 +125,9 @@ RUN \
 	&& apk add --no-cache --virtual .geoip2-build-deps \
 		libmaxminddb-dev \
 	&& apk add --no-cache --virtual .njs-build-deps \
-		readline-dev
+		readline-dev \
+	&& apk add --no-cache --virtual .zstd-build-deps \
+		zstd-dev
 
 WORKDIR /usr/src/
 
@@ -163,6 +170,10 @@ RUN \
 RUN \
   echo "Downloading ngx_http_geoip2_module ..." \
   && git clone --depth 1 --branch ${GEOIP2_VERSION} https://github.com/leev/ngx_http_geoip2_module /usr/src/ngx_http_geoip2_module
+
+RUN \
+  echo "Downloading zstd-nginx-module ..." \
+  && git clone --depth 1 --branch ${ZSTD_VERSION} https://github.com/tokers/zstd-nginx-module.git /usr/src/zstd
 
 RUN \
   echo "Cloning and configuring njs ..." \

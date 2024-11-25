@@ -181,27 +181,36 @@ RUN \
   echo "Downloading zstd-nginx-module ..." \
   && git clone --depth 1 --branch ${ZSTD_VERSION} https://github.com/tokers/zstd-nginx-module.git /usr/src/zstd
 
+
+RUN \
+  echo "Cloning and configuring quickjs ..." \
+  && mkdir -p /usr/src/njs \
+  && cd /usr/src/njs \
+  && git clone https://github.com/bellard/quickjs quickjs \
+  && cd quickjs \
+  && make -j"$(getconf _NPROCESSORS_ONLN)" libquickjs.a
+  
 RUN \
   echo "Cloning and configuring njs ..." \
-  && mkdir /usr/src/njs \
+  && mkdir -p /usr/src/njs \
   && cd /usr/src/njs \
   && git init \
   && git remote add origin https://github.com/nginx/njs.git \
   && git fetch --depth 1 origin ${NJS_COMMIT} \
   && git checkout -q FETCH_HEAD \
-  && ./configure --no-quickjs \
+  && ./configure --cc-opt='-Iquickjs' --ld-opt="-Lquickjs" \
   && make njs \
   && mv /usr/src/njs/build/njs /usr/sbin/njs \
   && echo "njs v$(njs -v)"
 
 # https://github.com/macbre/docker-nginx-http3/issues/152
-ARG CC_OPT='-g -O2 -flto=auto -ffat-lto-objects -flto=auto -ffat-lto-objects'
-ARG LD_OPT='-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -flto=auto'
+ARG CC_OPT='-g -O2 -flto=auto -ffat-lto-objects -flto=auto -ffat-lto-objects -I /usr/src/njs/quickjs'
+ARG LD_OPT='-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -flto=auto -L /usr/src/njs/quickjs'
 RUN \
   echo "Building nginx ..." \
   && mkdir -p /var/run/nginx/ \
 	&& cd /usr/src/nginx-$NGINX_VERSION \
-	&& ./auto/configure $CONFIG \
+       	&& ./auto/configure $CONFIG --with-cc-opt="$CC_OPT" --with-ld-opt="$LD_OPT" \
 	&& make -j"$(getconf _NPROCESSORS_ONLN)"
 
 RUN \

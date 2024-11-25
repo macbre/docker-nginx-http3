@@ -100,32 +100,38 @@ ARG CONFIG
 RUN \
 	apk add --no-cache --virtual .build-deps \
 		gcc \
-		libc-dev \
-		make \
-		musl-dev \
-		go \
-		ninja \
-		mercurial \
-		openssl-dev \
-		pcre-dev \
-		zlib-dev \
-		linux-headers \
-		gnupg \
-		libxslt-dev \
 		gd-dev \
 		geoip-dev \
+		gnupg \
+		go \
+		libc-dev \
+		libxslt-dev \
+		linux-headers \
+		make \
+		mercurial \
+		musl-dev \
+		ninja \
+		openssl-dev \
+		pcre-dev \
 		perl-dev \
+		zlib-dev \
 	&& apk add --no-cache --virtual .brotli-build-deps \
 		autoconf \
-		libtool \
 		automake \
-		git \
-		g++ \
 		cmake \
+		g++ \
+		git \
+		libtool \
 	&& apk add --no-cache --virtual .geoip2-build-deps \
 		libmaxminddb-dev \
 	&& apk add --no-cache --virtual .njs-build-deps \
+		libedit-dev \
+		libxml2-dev \
+		libxslt-dev \
+		openssl-dev \
+		pcre-dev \
 		readline-dev \
+		zlib-dev \
 	&& apk add --no-cache --virtual .zstd-build-deps \
 		zstd-dev
 
@@ -183,7 +189,7 @@ RUN \
   && git remote add origin https://github.com/nginx/njs.git \
   && git fetch --depth 1 origin ${NJS_COMMIT} \
   && git checkout -q FETCH_HEAD \
-  && ./configure \
+  && ./configure --no-quickjs \
   && make njs \
   && mv /usr/src/njs/build/njs /usr/sbin/njs \
   && echo "njs v$(njs -v)"
@@ -195,7 +201,7 @@ RUN \
   echo "Building nginx ..." \
   && mkdir -p /var/run/nginx/ \
 	&& cd /usr/src/nginx-$NGINX_VERSION \
-	&& ./auto/configure $CONFIG --with-cc-opt="$CC_OPT" --with-ld-opt="$LD_OPT" \
+	&& ./auto/configure $CONFIG \
 	&& make -j"$(getconf _NPROCESSORS_ONLN)"
 
 RUN \

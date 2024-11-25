@@ -188,7 +188,6 @@ RUN \
   && git checkout -q FETCH_HEAD \
   && ./configure  --cc-opt='-I /usr/src/quickjs' --ld-opt="-L /usr/src/quickjs" \
   && make njs \
-  && ls -lh /usr/src/njs/* \
   && mv /usr/src/njs/build/njs /usr/sbin/njs \
   && echo "njs v$(njs -v)"
 

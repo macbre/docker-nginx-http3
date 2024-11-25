@@ -110,7 +110,7 @@ jobs:
 
     - name: Test njs command line
       run: |
-        echo "console.log('Using njs v' + njs.version)" | docker run -i --rm macbre/nginx njs -q - | grep "Using njs v0.8.6"
+        echo "console.log('Using njs v' + njs.version)" | docker run -i --rm macbre/nginx njs -q - | grep "Using njs v0.8.7"
 
     - name: Show logs
       if: always()

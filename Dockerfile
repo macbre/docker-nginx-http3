@@ -126,7 +126,8 @@ RUN \
 		openssl-dev \
 		pcre-dev \
 		readline-dev \
-		zlib-dev
+		zlib-dev \
+	&& git config --global init.defaultBranch master
 
 WORKDIR /usr/src/
 

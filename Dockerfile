@@ -175,7 +175,8 @@ RUN \
   && cd /usr/src \
   && git clone https://github.com/bellard/quickjs quickjs \
   && cd quickjs \
-  && make libquickjs.a
+  && make libquickjs.a \
+  && echo "quickjs $(cat VERSION)"
 
 RUN \
   echo "Cloning and configuring njs ..." \

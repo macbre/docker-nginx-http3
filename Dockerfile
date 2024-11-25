@@ -120,7 +120,13 @@ RUN \
 	&& apk add --no-cache --virtual .geoip2-build-deps \
 		libmaxminddb-dev \
 	&& apk add --no-cache --virtual .njs-build-deps \
-		readline-dev
+		libedit-dev \
+		libxml2-dev \
+		libxslt-dev \
+		openssl-dev \
+		pcre-dev \
+		readline-dev \
+		zlib-dev
 
 WORKDIR /usr/src/
 
@@ -165,21 +171,28 @@ RUN \
   && git clone --depth 1 --branch ${GEOIP2_VERSION} https://github.com/leev/ngx_http_geoip2_module /usr/src/ngx_http_geoip2_module
 
 RUN \
+  echo "Cloning and configuring quickjs ..." \
+  && cd /usr/src \
+  && git clone https://github.com/bellard/quickjs quickjs \
+  && cd quickjs \
+  && make libquickjs.a
+
+RUN \
   echo "Cloning and configuring njs ..." \
-  && mkdir /usr/src/njs \
-  && cd /usr/src/njs \
+  && mkdir /usr/src/njs && cd /usr/src/njs \
   && git init \
   && git remote add origin https://github.com/nginx/njs.git \
   && git fetch --depth 1 origin ${NJS_COMMIT} \
   && git checkout -q FETCH_HEAD \
-  && ./configure \
+  && ./configure  --cc-opt='-I /usr/src/quickjs' --ld-opt="-L /usr/src/quickjs" \
   && make njs \
+  && ls -lh /usr/src/njs/* \
   && mv /usr/src/njs/build/njs /usr/sbin/njs \
   && echo "njs v$(njs -v)"
 
 # https://github.com/macbre/docker-nginx-http3/issues/152
-ARG CC_OPT='-g -O2 -flto=auto -ffat-lto-objects -flto=auto -ffat-lto-objects'
-ARG LD_OPT='-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -flto=auto'
+ARG CC_OPT='-g -O2 -flto=auto -ffat-lto-objects -flto=auto -ffat-lto-objects -I /usr/src/quickjs'
+ARG LD_OPT='-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -flto=auto -L /usr/src/quickjs'
 RUN \
   echo "Building nginx ..." \
   && mkdir -p /var/run/nginx/ \

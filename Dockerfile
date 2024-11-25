@@ -25,6 +25,7 @@ ARG NGINX_USER_UID=100
 ARG NGINX_GROUP_GID=101
 
 # https://nginx.org/en/docs/http/ngx_http_v3_module.html
+# https://nginx.org/en/docs/configure.html
 ARG CONFIG="\
 		--build=$NGINX_COMMIT \
 		--prefix=/etc/nginx \
@@ -176,11 +177,14 @@ RUN \
   && mv /usr/src/njs/build/njs /usr/sbin/njs \
   && echo "njs v$(njs -v)"
 
+# https://github.com/macbre/docker-nginx-http3/issues/152
+ARG CC_OPT='-g -O2 -flto=auto -ffat-lto-objects -flto=auto -ffat-lto-objects'
+ARG LD_OPT='-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -flto=auto'
 RUN \
   echo "Building nginx ..." \
   && mkdir -p /var/run/nginx/ \
 	&& cd /usr/src/nginx-$NGINX_VERSION \
-	&& ./auto/configure $CONFIG \
+	&& ./auto/configure $CONFIG --with-cc-opt="$CC_OPT" --with-ld-opt="$LD_OPT" \
 	&& make -j"$(getconf _NPROCESSORS_ONLN)"
 
 RUN \
@@ -213,8 +217,8 @@ ARG NGINX_COMMIT
 ARG NGINX_USER_UID
 ARG NGINX_GROUP_GID
 
-ENV NGINX_VERSION $NGINX_VERSION
-ENV NGINX_COMMIT $NGINX_COMMIT
+ENV NGINX_VERSION=$NGINX_VERSION
+ENV NGINX_COMMIT=$NGINX_COMMIT
 
 COPY --from=base /var/run/nginx/ /var/run/nginx/
 COPY --from=base /tmp/runDeps.txt /tmp/runDeps.txt

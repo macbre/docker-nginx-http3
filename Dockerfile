@@ -208,9 +208,9 @@ ARG LD_OPT='-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -flto=auto -L 
 RUN \
   echo "Building nginx ..." \
   && mkdir -p /var/run/nginx/ \
-	&& cd /usr/src/nginx-$NGINX_VERSION \
-       	&& ./auto/configure $CONFIG --with-cc-opt="$CC_OPT" --with-ld-opt="$LD_OPT" \
-	&& make -j"$(getconf _NPROCESSORS_ONLN)"
+  && cd /usr/src/nginx-$NGINX_VERSION \
+  && ./auto/configure $CONFIG --with-cc-opt="$CC_OPT" --with-ld-opt="$LD_OPT" \
+  && make -j"$(getconf _NPROCESSORS_ONLN)"
 
 RUN \
 	cd /usr/src/nginx-$NGINX_VERSION \

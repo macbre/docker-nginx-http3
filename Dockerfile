@@ -133,7 +133,8 @@ RUN \
 		readline-dev \
 		zlib-dev \
 	&& apk add --no-cache --virtual .zstd-build-deps \
-		zstd-dev
+		zstd-dev \
+	&& git config --global init.defaultBranch master
 
 WORKDIR /usr/src/
 
@@ -181,31 +182,29 @@ RUN \
   echo "Downloading zstd-nginx-module ..." \
   && git clone --depth 1 --branch ${ZSTD_VERSION} https://github.com/tokers/zstd-nginx-module.git /usr/src/zstd
 
-
 RUN \
   echo "Cloning and configuring quickjs ..." \
-  && mkdir -p /usr/src/njs \
-  && cd /usr/src/njs \
+  && cd /usr/src \
   && git clone https://github.com/bellard/quickjs quickjs \
   && cd quickjs \
-  && make -j"$(getconf _NPROCESSORS_ONLN)" libquickjs.a
-  
+  && make libquickjs.a \
+  && echo "quickjs $(cat VERSION)"
+
 RUN \
   echo "Cloning and configuring njs ..." \
-  && mkdir -p /usr/src/njs \
-  && cd /usr/src/njs \
+  && mkdir /usr/src/njs && cd /usr/src/njs \
   && git init \
   && git remote add origin https://github.com/nginx/njs.git \
   && git fetch --depth 1 origin ${NJS_COMMIT} \
   && git checkout -q FETCH_HEAD \
-  && ./configure --cc-opt='-Iquickjs' --ld-opt="-Lquickjs" \
+  && ./configure  --cc-opt='-I /usr/src/quickjs' --ld-opt="-L /usr/src/quickjs" \
   && make njs \
   && mv /usr/src/njs/build/njs /usr/sbin/njs \
   && echo "njs v$(njs -v)"
 
 # https://github.com/macbre/docker-nginx-http3/issues/152
-ARG CC_OPT='-g -O2 -flto=auto -ffat-lto-objects -flto=auto -ffat-lto-objects -I /usr/src/njs/quickjs'
-ARG LD_OPT='-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -flto=auto -L /usr/src/njs/quickjs'
+ARG CC_OPT='-g -O2 -flto=auto -ffat-lto-objects -flto=auto -ffat-lto-objects -I /usr/src/quickjs'
+ARG LD_OPT='-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -flto=auto -L /usr/src/quickjs'
 RUN \
   echo "Building nginx ..." \
   && mkdir -p /var/run/nginx/ \

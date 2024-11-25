@@ -70,7 +70,7 @@ jobs:
         curl -v --compressed localhost:8888 2>&1 | tee /tmp/out
 
         grep --fixed-strings --invert-match -i '< Server: nginx' /tmp/out > /dev/null
-        grep --fixed-strings '< Content-Encoding: br' /tmp/out
+        grep --fixed-strings '< Content-Encoding: zstd' /tmp/out
         grep --fixed-strings '<p>It works!</p>' /tmp/out
 
 

@@ -82,6 +82,8 @@ configure arguments:
 	--add-module=/usr/src/headers-more-nginx-module-0.37 
 	--add-module=/usr/src/njs/nginx 
 	--add-dynamic-module=/usr/src/ngx_http_geoip2_module
+	--with-cc-opt='-g -O2 -flto=auto -ffat-lto-objects -flto=auto -ffat-lto-objects' 
+	--with-ld-opt='-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -flto=auto'
 
 $ docker run -it macbre/nginx-http3 njs -v
 0.8.6

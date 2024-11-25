@@ -86,7 +86,7 @@ configure arguments:
 	--with-ld-opt='-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -flto=auto'
 
 $ docker run -it macbre/nginx-http3 njs -v
-0.8.6
+0.8.7
 ```
 
 ## SSL Grade A+ handling

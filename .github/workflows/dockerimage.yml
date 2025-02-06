@@ -102,7 +102,7 @@ jobs:
         docker run --rm --network host ghcr.io/macbre/curl-http3 \
           curl -v --insecure https://localhost:8889 --http3 --max-time 5 2>&1 | tee /tmp/h3
 
-        grep --fixed-strings '< HTTP/3 200' /tmp/h3
+        grep --fixed-strings 'HTTP/3 200' /tmp/h3
         grep --fixed-strings --invert-match -i '< server: nginx' /tmp/h3 > /dev/null
         grep --fixed-strings '< alt-svc: h3=":8889"; ma=86400' /tmp/h3
         grep --fixed-strings '< quic-status: h3' /tmp/h3

@@ -15,7 +15,7 @@ ARG NJS_COMMIT=9d3e71ca656b920e3e63b0e647aca8e91669d29a
 
 # https://github.com/openresty/headers-more-nginx-module#installation
 # we want to have https://github.com/openresty/headers-more-nginx-module/commit/e536bc595d8b490dbc9cf5999ec48fca3f488632
-ARG HEADERS_MORE_VERSION=0.37
+ARG HEADERS_MORE_VERSION=0.38
 
 # https://github.com/leev/ngx_http_geoip2_module/releases
 ARG GEOIP2_VERSION=3.4

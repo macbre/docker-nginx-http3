@@ -80,7 +80,7 @@ configure arguments:
 	--with-http_v3_module 
 	--with-openssl-opt=enable-ktls 
 	--add-module=/usr/src/ngx_brotli 
-	--add-module=/usr/src/headers-more-nginx-module-0.37 
+	--add-module=/usr/src/headers-more-nginx-module-0.38 
 	--add-module=/usr/src/njs/nginx 
 	--add-module=/usr/src/zstd 
 	--add-dynamic-module=/usr/src/ngx_http_geoip2_module 

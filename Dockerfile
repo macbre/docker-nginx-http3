@@ -10,8 +10,8 @@ ARG NGX_BROTLI_COMMIT=a71f9312c2deb28875acc7bacfdd5695a111aa53
 # https://github.com/google/boringssl
 #ARG BORINGSSL_COMMIT=fae0964b3d44e94ca2a2d21f86e61dabe683d130
 
-# https://github.com/nginx/njs/releases/tag/0.8.10
-ARG NJS_COMMIT=9d3e71ca656b920e3e63b0e647aca8e91669d29a
+# https://github.com/nginx/njs/releases/tag/0.9.0
+ARG NJS_COMMIT=fcb99b68f86a72c96e21b81b3b78251174dbd3bf
 
 # https://github.com/openresty/headers-more-nginx-module#installation
 # we want to have https://github.com/openresty/headers-more-nginx-module/commit/e536bc595d8b490dbc9cf5999ec48fca3f488632

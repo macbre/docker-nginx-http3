@@ -23,6 +23,9 @@ ARG GEOIP2_VERSION=3.4
 # https://github.com/tokers/zstd-nginx-module/releases
 ARG ZSTD_VERSION=0.1.1
 
+# https://github.com/openresty/luajit2/tags
+ARG LUAJIT2_VERSION=v2.1-20250117
+
 # NGINX UID / GID
 ARG NGINX_USER_UID=100
 ARG NGINX_GROUP_GID=101
@@ -93,6 +96,7 @@ ARG HEADERS_MORE_VERSION
 ARG NJS_COMMIT
 ARG GEOIP2_VERSION
 ARG ZSTD_VERSION
+ARG LUAJIT2_VERSION
 ARG NGINX_USER_UID
 ARG NGINX_GROUP_GID
 ARG CONFIG
@@ -181,6 +185,10 @@ RUN \
 RUN \
   echo "Downloading zstd-nginx-module ..." \
   && git clone --depth 1 --branch ${ZSTD_VERSION} https://github.com/tokers/zstd-nginx-module.git /usr/src/zstd
+
+RUN \
+  echo "Downloading luajit2 ..." \
+  && git clone --depth 1 --branch ${LUAJIT2_VERSION} https://github.com/openresty/luajit2.git /usr/src/luajit2
 
 RUN \
   echo "Cloning and configuring quickjs ..." \

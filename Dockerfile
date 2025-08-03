@@ -23,6 +23,9 @@ ARG GEOIP2_VERSION=3.4
 # https://github.com/tokers/zstd-nginx-module/releases
 ARG ZSTD_VERSION=0.1.1
 
+# https://github.com/openresty/luajit2/tags
+ARG LUAJIT2_VERSION=v2.1-20250117
+
 # NGINX UID / GID
 ARG NGINX_USER_UID=100
 ARG NGINX_GROUP_GID=101
@@ -84,7 +87,7 @@ ARG CONFIG="\
 		--add-dynamic-module=/usr/src/ngx_http_geoip2_module \
 	"
 
-FROM alpine:3.20 AS base
+FROM alpine:3.22 AS base
 
 ARG NGINX_VERSION
 ARG NGINX_COMMIT
@@ -93,6 +96,7 @@ ARG HEADERS_MORE_VERSION
 ARG NJS_COMMIT
 ARG GEOIP2_VERSION
 ARG ZSTD_VERSION
+ARG LUAJIT2_VERSION
 ARG NGINX_USER_UID
 ARG NGINX_GROUP_GID
 ARG CONFIG
@@ -183,6 +187,10 @@ RUN \
   && git clone --depth 1 --branch ${ZSTD_VERSION} https://github.com/tokers/zstd-nginx-module.git /usr/src/zstd
 
 RUN \
+  echo "Downloading luajit2 ..." \
+  && git clone --depth 1 --branch ${LUAJIT2_VERSION} https://github.com/openresty/luajit2.git /usr/src/luajit2
+
+RUN \
   echo "Cloning and configuring quickjs ..." \
   && cd /usr/src \
   && git clone https://github.com/bellard/quickjs quickjs \
@@ -236,7 +244,7 @@ RUN \
 			| xargs -r apk info --installed \
 			| sort -u > /tmp/runDeps.txt
 
-FROM alpine:3.20
+FROM alpine:3.22
 ARG NGINX_VERSION
 ARG NGINX_COMMIT
 ARG NGINX_USER_UID

@@ -27,12 +27,12 @@ docker pull ghcr.io/macbre/nginx-http3:latest
 
 ```
 $ docker run -it macbre/nginx-http3 nginx -V
-nginx version: nginx/1.29.0 (aff13bf32357)
+nginx version: nginx/1.29.1 (1db7c7ba4bc5)
 built by gcc 13.2.1 20240309 (Alpine 13.2.1_git20240309) 
-built with OpenSSL 3.3.3 11 Feb 2025
+built with OpenSSL 3.3.4 1 Jul 2025
 TLS SNI support enabled
 configure arguments: 
-	--build=aff13bf32357
+	--build=68813362708e 
 	--prefix=/etc/nginx 
 	--sbin-path=/usr/sbin/nginx 
 	--modules-path=/usr/lib/nginx/modules 

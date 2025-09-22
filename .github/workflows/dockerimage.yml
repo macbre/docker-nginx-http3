@@ -42,7 +42,7 @@ jobs:
           ghcr.io/macbre/nginx-http3:latest
 
     - name: Lint the Dockerfile
-      uses: hadolint/hadolint-action@v3.1.0
+      uses: hadolint/hadolint-action@v3.3.0
       with:
         dockerfile: Dockerfile
 

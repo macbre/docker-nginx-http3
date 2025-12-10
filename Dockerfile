@@ -1,7 +1,7 @@
 # https://github.com/nginx/nginx/blob/master/src/core/nginx.h
 ARG NGINX_VERSION=1.29.4
 
-# https://github.com/nginx/nginx
+# https://github.com/nginx/nginx/releases
 ARG NGINX_COMMIT=c704574
 
 # https://github.com/google/ngx_brotli

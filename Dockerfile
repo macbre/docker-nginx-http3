@@ -1,8 +1,8 @@
-# https://hg.nginx.org/nginx/file/tip/src/core/nginx.h
-ARG NGINX_VERSION=1.29.3
+# https://github.com/nginx/nginx/blob/master/src/core/nginx.h
+ARG NGINX_VERSION=1.29.4
 
-# https://hg.nginx.org/nginx/
-ARG NGINX_COMMIT=279676b97237
+# https://github.com/nginx/nginx
+ARG NGINX_COMMIT=c704574
 
 # https://github.com/google/ngx_brotli
 ARG NGX_BROTLI_COMMIT=a71f9312c2deb28875acc7bacfdd5695a111aa53
@@ -108,7 +108,6 @@ RUN \
 		libxslt-dev \
 		linux-headers \
 		make \
-		mercurial \
 		musl-dev \
 		ninja \
 		openssl-dev \
@@ -139,8 +138,10 @@ RUN \
 WORKDIR /usr/src/
 
 RUN \
-	echo "Cloning nginx $NGINX_VERSION (rev $NGINX_COMMIT from 'default' branch) ..." \
-	&& hg clone -b default --rev $NGINX_COMMIT https://hg.nginx.org/nginx/ /usr/src/nginx-$NGINX_VERSION
+	echo "Cloning nginx $NGINX_VERSION (rev $NGINX_COMMIT) ..." \
+	&& git clone https://github.com/nginx/nginx.git /usr/src/nginx-$NGINX_VERSION \
+	&& cd /usr/src/nginx-$NGINX_VERSION \
+	&& git reset --hard $NGINX_COMMIT
 
 RUN \
 	echo "Cloning brotli $NGX_BROTLI_COMMIT ..." \

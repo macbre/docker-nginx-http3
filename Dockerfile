@@ -1,8 +1,8 @@
 # https://github.com/nginx/nginx/blob/master/src/core/nginx.h
-ARG NGINX_VERSION=1.29.5
+ARG NGINX_VERSION=1.29.6
 
 # https://github.com/nginx/nginx/releases
-ARG NGINX_COMMIT=1f57d8d
+ARG NGINX_COMMIT=cb85fbb
 
 # https://github.com/google/ngx_brotli
 ARG NGX_BROTLI_COMMIT=a71f9312c2deb28875acc7bacfdd5695a111aa53

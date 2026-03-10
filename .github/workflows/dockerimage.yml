@@ -34,7 +34,7 @@ jobs:
 
     # https://github.com/marketplace/actions/build-and-push-docker-images
     - name: Build the Docker image
-      uses: docker/build-push-action@v6
+      uses: docker/build-push-action@v7
       with:
         context: .
         tags: macbre/nginx

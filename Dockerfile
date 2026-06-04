@@ -1,21 +1,18 @@
 # https://github.com/nginx/nginx/blob/master/src/core/nginx.h
-ARG NGINX_VERSION=1.29.8
+ARG NGINX_VERSION=1.31.1
 
 # https://github.com/nginx/nginx/releases
-ARG NGINX_COMMIT=5eaf45f
+ARG NGINX_COMMIT=d442052
 
 # https://github.com/google/ngx_brotli
 ARG NGX_BROTLI_COMMIT=a71f9312c2deb28875acc7bacfdd5695a111aa53
 
-# https://github.com/google/boringssl
-#ARG BORINGSSL_COMMIT=fae0964b3d44e94ca2a2d21f86e61dabe683d130
-
-# https://github.com/nginx/njs/releases/tag/0.9.8
-ARG NJS_COMMIT=ab6f49e9340ef1c0e56bf4a8a79e0a31c138819d
+# https://github.com/nginx/njs/releases/tag/0.9.9
+ARG NJS_COMMIT=9ead4e71f74a27279f3212bdb6cadb0e86981a1b
 
 # https://github.com/openresty/headers-more-nginx-module#installation
 # we want to have https://github.com/openresty/headers-more-nginx-module/commit/e536bc595d8b490dbc9cf5999ec48fca3f488632
-ARG HEADERS_MORE_VERSION=0.38
+ARG HEADERS_MORE_VERSION=0.39
 
 # https://github.com/leev/ngx_http_geoip2_module/releases
 ARG GEOIP2_VERSION=3.4
@@ -153,22 +150,6 @@ RUN \
 	&& git fetch --depth 1 origin $NGX_BROTLI_COMMIT \
 	&& git checkout --recurse-submodules -q FETCH_HEAD \
 	&& git submodule update --init --depth 1
-
-# hadolint ignore=SC2086
-#RUN \
-#  echo "Cloning boringssl ..." \
-#  && cd /usr/src \
-#  && git clone https://github.com/google/boringssl \
-#  && cd boringssl \
-#  && git checkout $BORINGSSL_COMMIT
-
-#RUN \
-#  echo "Building boringssl ..." \
-#  && cd /usr/src/boringssl \
-#  && mkdir build \
-#  && cd build \
-#  && cmake -GNinja .. \
-#  && ninja
 
 RUN \
   echo "Downloading headers-more-nginx-module ..." \

@@ -1,14 +1,14 @@
 # https://github.com/nginx/nginx/blob/master/src/core/nginx.h
-ARG NGINX_VERSION=1.31.3
+ARG NGINX_VERSION=1.31.6
 
 # https://github.com/nginx/nginx/releases
-ARG NGINX_COMMIT=073ab5d
+ARG NGINX_COMMIT=0a5db85
 
 # https://github.com/google/ngx_brotli
 ARG NGX_BROTLI_COMMIT=a71f9312c2deb28875acc7bacfdd5695a111aa53
 
-# https://github.com/nginx/njs/releases/tag/0.9.9
-ARG NJS_COMMIT=9ead4e71f74a27279f3212bdb6cadb0e86981a1b
+# https://github.com/nginx/njs/releases/tag/1.0.1
+ARG NJS_COMMIT=1b648f8805596c95368f8fa428a5c38c5d279857
 
 # https://github.com/openresty/headers-more-nginx-module#installation
 # we want to have https://github.com/openresty/headers-more-nginx-module/commit/e536bc595d8b490dbc9cf5999ec48fca3f488632

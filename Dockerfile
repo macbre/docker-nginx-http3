@@ -8,7 +8,7 @@ ARG NGINX_COMMIT=0a5db85
 ARG NGX_BROTLI_COMMIT=a71f9312c2deb28875acc7bacfdd5695a111aa53
 
 # https://github.com/nginx/njs/releases/tag/1.0.1
-ARG NJS_COMMIT=1b648f8
+ARG NJS_COMMIT=1b648f8805596c95368f8fa428a5c38c5d279857
 
 # https://github.com/openresty/headers-more-nginx-module#installation
 # we want to have https://github.com/openresty/headers-more-nginx-module/commit/e536bc595d8b490dbc9cf5999ec48fca3f488632

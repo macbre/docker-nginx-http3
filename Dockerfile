@@ -274,5 +274,5 @@ RUN \
   chown -R --verbose nginx:nginx \
     /var/run/nginx/
 
-USER nginx
+USER $NGINX_USER_UID
 CMD ["nginx", "-g", "daemon off;"]

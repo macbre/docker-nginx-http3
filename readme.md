@@ -91,7 +91,7 @@ configure arguments:
 
 
 $ docker run -it macbre/nginx-http3 njs -v
-1.0.2
+1.0.1
 ```
 
 ## SSL Grade A+ handling

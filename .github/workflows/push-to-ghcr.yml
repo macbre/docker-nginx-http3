@@ -24,4 +24,4 @@ jobs:
           image_name: macbre/nginx-http3
           github_token: ${{ secrets.GITHUB_TOKEN }}
           docker_io_token: ${{ secrets.DOCKER_IO_ACCESS_TOKEN }}
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          platforms: linux/amd64,linux/arm64

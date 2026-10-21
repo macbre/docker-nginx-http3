@@ -82,7 +82,7 @@ ARG CONFIG="\
 	"
 
 # https://hub.docker.com/_/alpine
-FROM alpine:3.23 AS base
+FROM alpine:3.24 AS base
 
 ARG NGINX_VERSION
 ARG NGINX_COMMIT
@@ -219,7 +219,7 @@ RUN \
 			| xargs -r apk info --installed \
 			| sort -u > /tmp/runDeps.txt
 
-FROM alpine:3.23
+FROM alpine:3.24
 ARG NGINX_VERSION
 ARG NGINX_COMMIT
 ARG NGINX_USER_UID

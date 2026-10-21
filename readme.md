@@ -3,7 +3,7 @@
 
 Stable and up-to-date [nginx](https://nginx.org/en/CHANGES) with [QUIC + HTTP/3 support](https://nginx.org/en/docs/http/ngx_http_v3_module.html), [Google's `brotli` compression](https://github.com/google/ngx_brotli), [`zstd` compression](https://github.com/tokers/zstd-nginx-module), [`njs` module](https://nginx.org/en/docs/njs/), [kTLS/sendfile support](https://delthas.fr/blog/2023/kernel-tls/) and [Grade A+ SSL config](https://ssl-config.mozilla.org/).
 
-Images for [`linux/amd64`, `linux/arm64` and `linux/arm/v7` architectures](https://github.com/macbre/docker-nginx-http3/pkgs/container/nginx-http3) are provided.
+Images for [`linux/amd64` and `linux/arm64` architectures](https://github.com/macbre/docker-nginx-http3/pkgs/container/nginx-http3) are provided.
 
 ## How to use this image
 As this project is based on the official [nginx image](https://hub.docker.com/_/nginx/) look for instructions there. In addition to the standard configuration directives, you'll be able to use the brotli module specific ones, see [here for official documentation](https://github.com/google/ngx_brotli#configuration-directives)

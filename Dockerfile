@@ -5,7 +5,7 @@ ARG NGINX_VERSION=1.31.8
 ARG NGINX_COMMIT=140aa94
 
 # https://github.com/google/ngx_brotli
-ARG NGX_BROTLI_COMMIT=a71f9312c2deb28875acc7bacfdd5695a111aa53
+ARG NGX_BROTLI_COMMIT=53e0fb55f250f48fe80c0ddbf6c0f7103cdbaae1
 
 # https://github.com/nginx/njs/releases/tag/1.0.2
 ARG NJS_COMMIT=72e6a980b9bf2a28ae2d568bbc3b6830a5d7c39e
